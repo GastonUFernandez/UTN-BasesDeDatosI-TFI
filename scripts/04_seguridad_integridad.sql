@@ -24,7 +24,6 @@ DROP TABLE PRODUCTOS;
 La base de datos bloquea la accion porque no tiene permisos administrativos.
 */
 
--- 2. DISEÑO DE VISTAS PARA OCULTAR INFORMACION SENSIBLE
 
 -- 2. DISEÑO DE VISTAS PARA OCULTAR INFORMACION SENSIBLE
 
