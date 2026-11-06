@@ -1,14 +1,16 @@
 USE TFI;
 
--- Búsqueda de productos que esten disponibles
+-- Búsqueda de productos con precio específico
 
-SELECT * FROM PRODUCTOS WHERE disponible = 1;
+DROP INDEX idx_precio_producto ON PRODUCTOS;
 
-EXPLAIN SELECT * FROM PRODUCTOS WHERE disponible = 1;
+SELECT * FROM PRODUCTOS WHERE precio = 122.41;
 
-CREATE INDEX idx_producto_disponible ON PRODUCTOS(disponible);
+EXPLAIN SELECT * FROM PRODUCTOS WHERE precio = 122.41;
 
-EXPLAIN SELECT * FROM PRODUCTOS WHERE disponible = 1;
+CREATE INDEX idx_precio_producto ON PRODUCTOS(precio);
+
+EXPLAIN SELECT * FROM PRODUCTOS WHERE precio = 122.41;
 
 -- Listar productos en un rango de precios
 
