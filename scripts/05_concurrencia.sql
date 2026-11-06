@@ -46,3 +46,27 @@ END //
 
 DELIMITER ;
 
+
+
+-- NIVELES DE AISLAMIENTO (READ COMMITTED vs REPEATABLE READ)
+
+-- CASO A: Nivel de Aislamiento READ COMMITTED (Permite Lecturas No Repetibles)
+-- [SESIÓN A]:
+-- SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+-- START TRANSACTION;
+-- SELECT stock FROM PRODUCTOS WHERE id_producto = 1;
+-- SELECT stock FROM PRODUCTOS WHERE id_producto = 1; -- (Devuelve valor actualizado)
+-- COMMIT;
+
+-- [SESIÓN B]:
+-- START TRANSACTION;
+-- UPDATE PRODUCTOS SET stock = stock - 1 WHERE id_producto = 1;
+-- COMMIT;
+
+-- CASO B: Nivel de Aislamiento REPEATABLE READ (Por defecto en InnoDB)
+-- [SESIÓN A]:
+-- SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+-- START TRANSACTION;
+-- SELECT stock FROM PRODUCTOS WHERE id_producto = 1;
+-- SELECT stock FROM PRODUCTOS WHERE id_producto = 1; -- (Mantiene valor inicial por MVCC)
+-- COMMIT;
