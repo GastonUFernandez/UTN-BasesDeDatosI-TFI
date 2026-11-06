@@ -36,3 +36,15 @@ CREATE OR REPLACE VIEW vista_catalogo_disponible AS
 SELECT id_producto, nombre, descripcion, precio, stock, id_categoria
 FROM PRODUCTOS
 WHERE stock > 0;
+
+-- 3. CONSULTAS DE PRUEBA Y VALIDACION DE INTEGRIDAD
+
+-- Prueba 1: Verificar el acceso a la vista segura de usuarios (no expone la contraseña)
+SELECT * FROM vista_usuarios_segura;
+
+-- Prueba 2: Verificar la vista de catalogo activo (solo trae productos con stock disponible)
+SELECT * FROM vista_catalogo_disponible;
+
+-- Prueba 3: Intento de violar una restriccion (ejemplo de integracion)
+-- INSERT INTO PRODUCTOS (nombre, precio, stock, id_categoria) VALUES ('Producto Invalido', -50.00, 10, 1);
+-- El motor de MySQL devolvera error por violacion de restriccion CHECK / datos invalidos.
