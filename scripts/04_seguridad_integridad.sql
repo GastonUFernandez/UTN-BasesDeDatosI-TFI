@@ -46,17 +46,24 @@ WHERE stock > 0;
 -- Prueba de la Vista 2: Verificar la vista de catalogo activo (solo trae productos con stock disponible)
 SELECT * FROM vista_catalogo_disponible;
 
--- 3. CONSULTAS DE PRUEBA Y VALIDACION DE INTEGRIDAD
+-- 3. VALIDACIONES Y PRUEBAS DE INTEGRIDAD (MÍNIMO 2 ESCENARIOS)
 
--- Prueba 1: Verificar el acceso a la vista segura de usuarios (no expone la contraseña)
-SELECT * FROM vista_usuarios_segura;
+-- Prueba de Integridad 1: Restricción CHECK (Precio fuera de rango / negativo)
+-- INSERT INTO PRODUCTOS (nombre, precio, stock, categoria_id) VALUES ('Producto Invalido', -50.00, 10, 1);
+/*
+Error devuelto por MySQL:
+ERROR 3819 (HY000): Check constraint 'productos_chk_1' is violated.
+(El motor rechaza el ingreso porque el precio no puede ser menor a 0).
+*/
 
--- Prueba 2: Verificar la vista de catalogo activo (solo trae productos con stock disponible)
-SELECT * FROM vista_catalogo_disponible;
 
--- Prueba 3: Intento de violar una restriccion (ejemplo de integracion)
--- INSERT INTO PRODUCTOS (nombre, precio, stock, id_categoria) VALUES ('Producto Invalido', -50.00, 10, 1);
--- El motor de MySQL devolvera error por violacion de restriccion CHECK / datos invalidos.
+-- Prueba de Integridad 2: Restricción UNIQUE / Clave Duplicada (Email duplicado en USUARIO)
+-- INSERT INTO USUARIO (nombre, apellido, email, password, rol) VALUES ('Juan', 'Perez', 'correo_ya_existente@mail.com', '1234', 'Cliente');
+/*
+Error devuelto por MySQL:
+ERROR 1062 (23000): Duplicate entry 'correo_ya_existente@mail.com' for key 'usuario.email'
+(El motor impide duplicar un dato definido como UNIQUE).
+*/
 
 
 
