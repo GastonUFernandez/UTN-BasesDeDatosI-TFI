@@ -24,9 +24,10 @@ JOIN CATEGORIA c ON p.categoria_id = c.id_categoria;
 
 -- Join: Calcular la cantidad de productos y el precio promedio por cada categoría
 
-SELECT p.id_producto, p.nombre, p.precio, c.nombre AS categoria
+SELECT c.nombre, COUNT(*) as Cantidad, ROUND(AVG(p.precio), 2) AS precio_promedio_categoria
 FROM PRODUCTOS p
-JOIN CATEGORIA c ON p.categoria_id = c.id_categoria;
+JOIN CATEGORIA c ON p.categoria_id = c.id_categoria
+GROUP BY c.id_categoria;
 
 -- GROUP BY + HAVING: Listar categorías con stock mayor a determinado valor
 
@@ -37,6 +38,12 @@ GROUP BY c.nombre
 HAVING SUM(p.stock) > 97000;
 
 -- Subconsulta: Encontrar productos cuyo precio sea mayor al promedio
+
+SELECT nombre, precio 
+FROM PRODUCTOS 
+WHERE precio > (
+	SELECT AVG(precio) FROM PRODUCTOS
+);
 
 -- View: vista para que el usuario vea sus pedidos
 
