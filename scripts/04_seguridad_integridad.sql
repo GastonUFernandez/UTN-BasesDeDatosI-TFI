@@ -26,6 +26,8 @@ La base de datos bloquea la accion porque no tiene permisos administrativos.
 
 -- 2. DISEÑO DE VISTAS PARA OCULTAR INFORMACION SENSIBLE
 
+-- 2. DISEÑO DE VISTAS PARA OCULTAR INFORMACION SENSIBLE
+
 -- Vista 1: Muestra los usuarios sin exponer sus contraseñas
 CREATE OR REPLACE VIEW vista_usuarios_segura AS
 SELECT id_usuario, nombre, apellido, email, celular, rol
@@ -33,7 +35,7 @@ FROM USUARIO;
 
 -- Vista 2: Muestra el catalogo de productos disponibles al publico
 CREATE OR REPLACE VIEW vista_catalogo_disponible AS
-SELECT id_producto, nombre, descripcion, precio, stock, id_categoria
+SELECT id_producto, categoria_id, nombre, precio, descripcion, stock, disponible
 FROM PRODUCTOS
 WHERE stock > 0;
 
