@@ -67,8 +67,8 @@ ERROR 1062 (23000): Duplicate entry 'correo_ya_existente@mail.com' for key 'usua
 
 
 
--- 4. CONSULTA SEGURA MEDIANTE PROCEDIMIENTO ALMACENADO
--- En lugar de concatenar strings en código, usamos parámetros (IN)
+-- 4. CONSULTA SEGURA MEDIANTE PROCEDIMIENTO ALMACENADO Y PRUEBA ANTI-INYECCIÓN
+
 DELIMITER //
 
 CREATE PROCEDURE sp_buscar_productos_por_precio(IN p_precio_maximo DECIMAL(12,2))
@@ -82,3 +82,22 @@ DELIMITER ;
 
 -- Ejemplo de ejecución segura:
 -- CALL sp_buscar_productos_por_precio(500.00);
+
+/*
+DOCUMENTACIÓN DE LA PRUEBA ANTI-INYECCIÓN:
+
+1. El intento malicioso: 
+   ¿Qué pasaría si un usuario intentara inyectar código malicioso a través del parámetro? 
+   Por ejemplo, si se ejecutara intentando manipular el tipado (ej: CALL sp_buscar_productos_por_precio('500 OR 1=1; DROP TABLE PRODUCTOS;--')).
+   Sin embargo, al estar el parámetro estrictamente tipado como DECIMAL(12,2), el motor de MySQL bloqueará 
+   de entrada cualquier intento de pasar texto con comandos o cadenas inválidas, arrojando un error de conversión de tipo de dato:
+   -- ERROR 1366 (HY000): Incorrect decimal value: '500 OR 1=1...' for column 'p_precio_maximo' at row 1
+
+2. La breve explicación: 
+   El procedimiento almacenado está protegido contra SQL Injection debido a dos factores clave:
+   - Tipado estricto: El parámetro de entrada `IN` es de tipo `DECIMAL(12,2)`, por lo que el motor de base de datos fuerza a que 
+     cualquier valor recibido sea numérico, rechazando texto o fragmentos de código SQL.
+   - Parametrización: Al utilizar variables declaradas en lugar de concatenación dinámica de strings (como comandos PREPARE/EXECUTE con 
+     cadenas de texto concatenadas), MySQL trata el valor recibido estrictamente como un **dato** y jamás como código ejecutable, 
+     garantizando la integridad y seguridad de la base de datos.
+*/
