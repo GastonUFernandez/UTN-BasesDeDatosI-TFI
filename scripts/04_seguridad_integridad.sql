@@ -26,18 +26,25 @@ Si se conecta con el usuario 'app_tfi_user' y se intenta borrar una tabla:
 */
 
 
--- 2. DISEÑO DE VISTAS PARA OCULTAR INFORMACION SENSIBLE
+-- 2. DISEÑO DE VISTAS PARA OCULTAR INFORMACION SENSIBLE Y SUS PRUEBAS
 
 -- Vista 1: Muestra los usuarios sin exponer sus contraseñas
 CREATE OR REPLACE VIEW vista_usuarios_segura AS
 SELECT id_usuario, nombre, apellido, email, celular, rol
 FROM USUARIO;
 
+-- Prueba de la Vista 1: Verificar el acceso a la vista segura (no expone la contraseña)
+SELECT * FROM vista_usuarios_segura;
+
+
 -- Vista 2: Muestra el catalogo de productos disponibles al publico
 CREATE OR REPLACE VIEW vista_catalogo_disponible AS
 SELECT id_producto, categoria_id, nombre, precio, descripcion, stock, disponible
 FROM PRODUCTOS
 WHERE stock > 0;
+
+-- Prueba de la Vista 2: Verificar la vista de catalogo activo (solo trae productos con stock disponible)
+SELECT * FROM vista_catalogo_disponible;
 
 -- 3. CONSULTAS DE PRUEBA Y VALIDACION DE INTEGRIDAD
 
