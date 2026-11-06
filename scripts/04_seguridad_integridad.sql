@@ -1,6 +1,6 @@
-USE TFI;
 
 -- ETAPA 4: SEGURIDAD E INTEGRIDAD
+
 
 -- 1. CREACION DE USUARIO CON PRIVILEGIOS MINIMOS
 
@@ -20,8 +20,9 @@ FLUSH PRIVILEGES;
 /*
 Prueba de acceso restringido:
 Si se conecta con el usuario 'app_tfi_user' y se intenta borrar una tabla:
-DROP TABLE PRODUCTOS;
-La base de datos bloquea la accion porque no tiene permisos administrativos.
+-- DROP TABLE PRODUCTOS;
+-- Error devuelto por MySQL: 
+-- ERROR 1142 (42000): DROP command denied to user 'app_tfi_user'@'localhost' for table 'PRODUCTOS'
 */
 
 
