@@ -96,7 +96,7 @@ DOCUMENTACIÓN DE LA PRUEBA ANTI-INYECCIÓN:
 2. La breve explicación: 
    El procedimiento almacenado está protegido contra SQL Injection debido a dos factores clave:
    - Tipado estricto: El parámetro de entrada `IN` es de tipo `DECIMAL(12,2)`, por lo que el motor de base de datos fuerza a que 
-     cualquier valor recibido sea numérico, rechazando texto o fragmentos de código SQL.
+     cualquier valor recibido sea numérico, rechazando texto o fragmentos de código SQL
    - Parametrización: Al utilizar variables declaradas en lugar de concatenación dinámica de strings (como comandos PREPARE/EXECUTE con 
      cadenas de texto concatenadas), MySQL trata el valor recibido estrictamente como un **dato** y jamás como código ejecutable, 
      garantizando la integridad y seguridad de la base de datos.
