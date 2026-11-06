@@ -23,3 +23,16 @@ Si se conecta con el usuario 'app_tfi_user' y se intenta borrar una tabla:
 DROP TABLE PRODUCTOS;
 La base de datos bloquea la accion porque no tiene permisos administrativos.
 */
+
+-- 2. DISEÑO DE VISTAS PARA OCULTAR INFORMACION SENSIBLE
+
+-- Vista 1: Muestra los usuarios sin exponer sus contraseñas
+CREATE OR REPLACE VIEW vista_usuarios_segura AS
+SELECT id_usuario, nombre, apellido, email, celular, rol
+FROM USUARIO;
+
+-- Vista 2: Muestra el catalogo de productos disponibles al publico
+CREATE OR REPLACE VIEW vista_catalogo_disponible AS
+SELECT id_producto, nombre, descripcion, precio, stock, id_categoria
+FROM PRODUCTOS
+WHERE stock > 0;
