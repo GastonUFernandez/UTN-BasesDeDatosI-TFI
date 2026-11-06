@@ -8,7 +8,7 @@ USE TFI;
 Se usa el método de 'Tablas semillas' para combinar valores
 */
 
-INSERT INTO Categoria (nombre, descripcion) VALUES
+INSERT INTO CATEGORIA (nombre, descripcion) VALUES
   ( "Electronica", "Productos electrónicos"),
   ( "Hogar", "Productos del hogar"),
   ( "Ropa", ""),
@@ -112,8 +112,8 @@ Se usa el método de 'pseudoaleatoriedad'
 */
 
 INSERT INTO PRODUCTOS (categoria_id, nombre, precio, descripcion, stock, disponible)
-SELECT 
-    FLOOR(1 + (RAND() * 5)) AS categoria_id,
+SELECT
+    FLOOR(1 + (RAND() * 4)) AS categoria_id,
     CONCAT('Producto_', ROW_NUMBER() OVER ()) AS nombre,
     ROUND(10 + (RAND() * 990), 2) AS precio,
     'Descripción de prueba para el producto' AS descripcion,
@@ -135,7 +135,7 @@ Se usa el método de 'Tablas calendario' para las fechas y 'Catálogos/maestras'
 */
 
 INSERT INTO PEDIDO (usuario_id, fecha, estado, total, forma_de_pago)
-SELECT 
+SELECT
     id_usuario,
     DATE_ADD('2026-01-01', INTERVAL FLOOR(RAND() * 300) DAY) AS fecha,
     CASE 
@@ -160,10 +160,27 @@ Se usa el método de 'Expansiones iterativas'
 */
 
 INSERT INTO DETALLE_PEDIDO (pedido_id, producto_id, cantidad, subtotal)
-SELECT 
-    p.id_pedido,
-    pr.id_producto,
-    FLOOR(1 + (RAND() * 5)) AS cantidad,
-    pr.precio * FLOOR(1 + (RAND() * 5)) AS subtotal
-FROM PEDIDO p
-JOIN PRODUCTOS pr ON pr.id_producto = FLOOR(1 + (RAND() * (SELECT COUNT(*) FROM PRODUCTOS)));
+WITH RECURSIVE contador AS (
+	-- Semilla
+	SELECT 1 AS n
+	UNION ALL
+	-- Iteración: solo incrementa, sin RAND()
+	SELECT n + 1 FROM contador WHERE n < 35000
+),
+datos AS (
+	SELECT
+		-- Pedido: ID aleatorio en [1, 15000]
+        FLOOR(1 + (RAND() * 15000)) AS id_pedido,
+        -- Producto: ID aleatorio en [1, 500]
+		FLOOR(1 + (RAND() * 500)) AS id_producto,
+        -- Cantidad: aleatoria en [1, 5], calculada UNA sola vez
+        FLOOR(1 + (RAND() * 5)) AS cantidad
+  FROM contador
+)
+SELECT
+    d.id_pedido,
+    d.id_producto,
+    d.cantidad,
+    pr.precio * d.cantidad AS subtotal
+FROM datos d
+JOIN PRODUCTOS pr ON pr.id_producto = d.id_producto;
