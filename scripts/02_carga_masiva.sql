@@ -113,7 +113,7 @@ Se usa el método de 'pseudoaleatoriedad'
 
 INSERT INTO PRODUCTOS (categoria_id, nombre, precio, descripcion, stock, disponible)
 SELECT
-    FLOOR(1 + (RAND() * 4)) AS categoria_id,
+    FLOOR(1 + (RAND() * 5)) AS categoria_id,
     CONCAT('Producto_', ROW_NUMBER() OVER ()) AS nombre,
     ROUND(10 + (RAND() * 990), 2) AS precio,
     'Descripción de prueba para el producto' AS descripcion,
