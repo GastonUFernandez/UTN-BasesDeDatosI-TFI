@@ -50,9 +50,19 @@ SELECT * FROM vista_catalogo_disponible;
 -- INSERT INTO PRODUCTOS (nombre, precio, stock, id_categoria) VALUES ('Producto Invalido', -50.00, 10, 1);
 -- El motor de MySQL devolvera error por violacion de restriccion CHECK / datos invalidos.
 
+
+
+
 -- implementa conexion con usuario seguro y PreparedStatement en Java
 
-package tfi.seguridad;
+-- Otorgar permisos sobre las vistas creadas en la Etapa 4
+GRANT SELECT ON TFI.vista_usuarios_segura TO 'app_tfi_user'@'localhost';
+GRANT SELECT ON TFI.vista_catalogo_disponible TO 'app_tfi_user'@'localhost';
+
+-- Actualizar los privilegios en el servidor
+FLUSH PRIVILEGES;
+
+package tfi.conexion; // Ajustá esto según el paquete que hayas creado
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -62,8 +72,8 @@ import java.sql.SQLException;
 
 public class ConexionSegura {
 
-    // Utiliza el usuario con privilegios mínimos creado en la Etapa 4
-    private static final String URL = "jdbc:mysql://localhost:3306/TFI?useSSL=false&serverTimezone=UTC";
+    // Configuración con el usuario de privilegios mínimos creado en la Etapa 4
+    private static final String URL = "jdbc:mysql://localhost:3306/TFI?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     private static final String USER = "app_tfi_user";
     private static final String PASS = "ClaveSegura2026$";
 
@@ -71,16 +81,17 @@ public class ConexionSegura {
         Connection conexion = null;
         try {
             conexion = DriverManager.getConnection(URL, USER, PASS);
-            System.out.println("Conexión exitosa con permisos restringidos.");
+            System.out.println("¡Conexión exitosa con permisos restringidos!");
         } catch (SQLException e) {
             System.err.println("Error de conexión: " + e.getMessage());
         }
         return conexion;
     }
 
-    // Ejemplo de consulta segura usando PreparedStatement (integridad contra SQL Injection)
+    // Método que utiliza PreparedStatement para evitar Inyección SQL y consultar la vista segura
     public static void consultarCatalogoSeguro(int idCategoriaFiltro) {
-        String sql = "SELECT * FROM vista_catalogo_disponible WHERE id_categoria = ?";
+        // Consulta usando la vista y la columna categoria_id que validamos en Workbench
+        String sql = "SELECT * FROM vista_catalogo_disponible WHERE categoria_id = ?";
         
         try (Connection conn = conectar();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -88,12 +99,32 @@ public class ConexionSegura {
             pstmt.setInt(1, idCategoriaFiltro);
             ResultSet rs = pstmt.executeQuery();
             
+            System.out.println("--- Resultados del catálogo para la categoría " + idCategoriaFiltro + " ---");
+            boolean hayResultados = false;
             while (rs.next()) {
+                hayResultados = true;
                 System.out.println("Producto: " + rs.getString("nombre") + 
-                                   " - Precio: $" + rs.getDouble("precio"));
+                                   " | Precio: $" + rs.getDouble("precio") + 
+                                   " | Stock: " + rs.getInt("stock"));
+            }
+            if (!hayResultados) {
+                System.out.println("No hay productos con stock disponible para esta categoría.");
             }
         } catch (SQLException e) {
             System.err.println("Error al consultar la vista: " + e.getMessage());
+        }
+    }
+
+    // Método main para probar la ejecución directamente desde NetBeans
+    public static void main(String[] args) {
+        System.out.println("Iniciando prueba de conexión segura en Java...\n");
+        
+        Connection c = conectar();
+        
+        if (c != null) {
+            System.out.println("\n----------------------------------------");
+            consultarCatalogoSeguro(1); // Prueba consultando la categoría 1
+            System.out.println("----------------------------------------");
         }
     }
 }
