@@ -47,8 +47,8 @@ El proyecto abarca el diseño, implementación, optimización y prueba de una ba
 
 ```text
 ├── docs/
-│   ├── DER.pdf                    # Diagrama Entidad-Relación
-│   └── Anexo_IA_Evidencias.pdf    # Evidencias de tutoría con IA
+│   ├── DER.pdf                     # Diagrama Entidad-Relación
+│   └── Anexo_IA_Evidencias.pdf     # Evidencias de tutoría con IA
 ├── scripts/
 │   ├── 01_esquema_constraints.sql  # Creación de tablas y restricciones (Etapa 1)
 │   ├── 02_carga_masiva.sql         # Poblado masivo de datos (Etapa 2)
