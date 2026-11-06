@@ -102,29 +102,68 @@ SELECT
 FROM temp_nombres n
 CROSS JOIN temp_apellidos a;
 
-DROP TABLE temp_nombres;
-DROP TABLE temp_apellidos;
 
 -- #########################
--- 3. Carga de datos en Productos
+-- 3. Carga de datos en PRODUCTOS
 -- #########################
 
 /*
 Se usa el método de 'pseudoaleatoriedad'
 */
 
+INSERT INTO PRODUCTOS (categoria_id, nombre, precio, descripcion, stock, disponible)
+SELECT 
+    FLOOR(1 + (RAND() * 5)) AS categoria_id,
+    CONCAT('Producto_', ROW_NUMBER() OVER ()) AS nombre,
+    ROUND(10 + (RAND() * 990), 2) AS precio,
+    'Descripción de prueba para el producto' AS descripcion,
+    FLOOR(10 + (RAND() * 500)) AS stock,
+    1 AS disponible
+FROM temp_nombres;
+
+-- Acá recién limpiamos las tablas temporales que se usaron arriba y abajo
+DROP TABLE temp_nombres;
+DROP TABLE temp_apellidos;
+
+
 -- #########################
--- 4. Carga de datos en Pedidos
+-- 4. Carga de datos en PEDIDO
 -- #########################
 
 /*
 Se usa el método de 'Tablas calendario' para las fechas y 'Catálogos/maestras'
 */
 
+INSERT INTO PEDIDO (usuario_id, fecha, estado, total, forma_de_pago)
+SELECT 
+    id_usuario,
+    DATE_ADD('2026-01-01', INTERVAL FLOOR(RAND() * 300) DAY) AS fecha,
+    CASE 
+        WHEN RAND() < 0.7 THEN 'COMPLETADO'
+        WHEN RAND() < 0.9 THEN 'PENDIENTE'
+        ELSE 'CANCELADO'
+    END AS estado,
+    ROUND(50 + (RAND() * 2000), 2) AS total,
+    CASE 
+        WHEN RAND() < 0.5 THEN 'TARJETA'
+        ELSE 'TRANSFERENCIA'
+    END AS forma_de_pago
+FROM USUARIO;
+
+
 -- #########################
--- 5. Carga de datos en Detalle_Pedidos
+-- 5. Carga de datos en DETALLE_PEDIDO
 -- #########################
 
 /*
 Se usa el método de 'Expansiones iterativas'
 */
+
+INSERT INTO DETALLE_PEDIDO (pedido_id, producto_id, cantidad, subtotal)
+SELECT 
+    p.id_pedido,
+    pr.id_producto,
+    FLOOR(1 + (RAND() * 5)) AS cantidad,
+    pr.precio * FLOOR(1 + (RAND() * 5)) AS subtotal
+FROM PEDIDO p
+JOIN PRODUCTOS pr ON pr.id_producto = FLOOR(1 + (RAND() * (SELECT COUNT(*) FROM PRODUCTOS)));
