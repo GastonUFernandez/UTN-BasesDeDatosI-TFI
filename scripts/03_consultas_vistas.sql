@@ -30,6 +30,12 @@ JOIN CATEGORIA c ON p.categoria_id = c.id_categoria;
 
 -- GROUP BY + HAVING: Listar categorías con stock mayor a determinado valor
 
+SELECT c.nombre AS categoria, SUM(p.stock)
+FROM CATEGORIA c
+JOIN PRODUCTOS p ON p.categoria_id = c.id_categoria
+GROUP BY c.nombre
+HAVING SUM(p.stock) > 97000;
+
 -- Subconsulta: Encontrar productos cuyo precio sea mayor al promedio
 
 -- View: vista para que el usuario vea sus pedidos
