@@ -48,3 +48,51 @@ SELECT * FROM vista_catalogo_disponible;
 -- Prueba 3: Intento de violar una restriccion (ejemplo de integracion)
 -- INSERT INTO PRODUCTOS (nombre, precio, stock, id_categoria) VALUES ('Producto Invalido', -50.00, 10, 1);
 -- El motor de MySQL devolvera error por violacion de restriccion CHECK / datos invalidos.
+
+-- implementa conexion con usuario seguro y PreparedStatement en Java
+
+package tfi.seguridad;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class ConexionSegura {
+
+    // Utiliza el usuario con privilegios mínimos creado en la Etapa 4
+    private static final String URL = "jdbc:mysql://localhost:3306/TFI?useSSL=false&serverTimezone=UTC";
+    private static final String USER = "app_tfi_user";
+    private static final String PASS = "ClaveSegura2026$";
+
+    public static Connection conectar() {
+        Connection conexion = null;
+        try {
+            conexion = DriverManager.getConnection(URL, USER, PASS);
+            System.out.println("Conexión exitosa con permisos restringidos.");
+        } catch (SQLException e) {
+            System.err.println("Error de conexión: " + e.getMessage());
+        }
+        return conexion;
+    }
+
+    // Ejemplo de consulta segura usando PreparedStatement (integridad contra SQL Injection)
+    public static void consultarCatalogoSeguro(int idCategoriaFiltro) {
+        String sql = "SELECT * FROM vista_catalogo_disponible WHERE id_categoria = ?";
+        
+        try (Connection conn = conectar();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, idCategoriaFiltro);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                System.out.println("Producto: " + rs.getString("nombre") + 
+                                   " - Precio: $" + rs.getDouble("precio"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al consultar la vista: " + e.getMessage());
+        }
+    }
+}
