@@ -47,6 +47,7 @@ WHERE precio > (
 
 -- View: vista para que el usuario vea sus pedidos
 
+DROP VIEW IF EXISTS vista_pedidos_detallados;
 CREATE VIEW vista_pedidos_detallados AS
 SELECT u.id_usuario, u.nombre, u.apellido, p.total, p.fecha, p.estado 
 FROM PEDIDO p 
