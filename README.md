@@ -49,13 +49,13 @@ TFI - BASES DE DATOS I (UTN)
 Autores: Gastón Uriel Fernández & Mirko Alexander Stamm
 
 ORDEN DE EJECUCIÓN DE SCRIPTS:
-1. 01_esquema.sql              -> Crea la base de datos, tablas, PK, FK, UNIQUE y CHECK con restricciones de idempotencia.
-2. 02_catalogos.sql            -> Inserta los datos maestros (categorías).
-3. 03_carga_masiva.sql         -> Inserta datos de prueba en masa (usuarios, productos, pedidos, detalles).
-4. 04_indices.sql              -> Crea los índices sobre columnas de relación y búsqueda frecuente.
-5. 05_consultas.sql            -> Contiene las consultas principales de negocio solicitadas.
-6. 05_explain.sql              -> Análisis EXPLAIN de las consultas clave.
-7. 06_vistas.sql               -> Crea las vistas del sistema con DROP VIEW IF EXISTS.
-8. 07_seguridad.sql            -> Gestión de usuarios, roles y privilegios.
-9. 08_transacciones.sql        -> Bloques transaccionales y manejo de errores (COMMIT/ROLLBACK).
-10. 09_concurrencia_guiada.sql -> Pruebas de concurrencia y simulación de bloqueos.
+1.  01_esquema.sql              -> Crea la base de datos, tablas, PK, FK, UNIQUE y CHECK con restricciones de idempotencia.
+2.  02_catalogos.sql            -> Inserta los datos maestros (categorías).
+3.  03_carga_masiva.sql         -> Inserta datos de prueba en masa (usuarios, productos, pedidos, detalles).
+4.  04_indices.sql              -> Crea los índices sobre columnas de relación y búsqueda frecuente.
+5.  05_consultas.sql            -> Contiene las consultas principales de negocio solicitadas.
+6.  06_explain.sql              -> Análisis EXPLAIN de las consultas clave.
+7.  07_vistas.sql               -> Crea las vistas del sistema con DROP VIEW IF EXISTS.
+8.  08_seguridad.sql            -> Gestión de usuarios, roles y privilegios.
+9.  09_transacciones.sql        -> Bloques transaccionales y manejo de errores (COMMIT/ROLLBACK).
+10. 10_concurrencia_guiada.sql -> Pruebas de concurrencia y simulación de bloqueos.
